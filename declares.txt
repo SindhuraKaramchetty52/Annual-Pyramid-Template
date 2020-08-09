@@ -1,0 +1,7 @@
+DECLARE EXIT handler for 1062 set o_error_status := "Duplicate entry in table";
+  
+DECLARE EXIT handler for 1048 set o_error_status := "Trying to populate a non-null column with null value"; 
+
+DECLARE EXIT handler for sqlexception set o_error_status:= "Generic SQLException. You'll just have to figure out the SQLSTATE yourself...." ;
+	
+DECLARE EXIT handler for 1452 set o_error_status := "Foreign Key Constraint violated in table";
