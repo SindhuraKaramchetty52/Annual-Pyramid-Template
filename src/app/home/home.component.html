@@ -1,0 +1,289 @@
+<br>
+<h3 style="color:red;">{{errorMsg}}</h3><br>
+<select class="btn btn-secondary" (change)="mysbu($event)" style="width:18%;">
+  <option hidden value="0">SBU</option>
+  <option *ngFor="let sbudetail of sbusDBData" value="{{sbudetail?.id}}">{{sbudetail?.sbuName}}</option>
+  <option value="ALL">ALL</option>
+</select>
+&nbsp;&nbsp;&nbsp;
+<select class="btn btn-secondary" (change)="mycluster($event)" style="width:18%">
+  <option hidden>CLUSTER</option>
+  <option *ngFor="let clusterdetail of listClusterData" value="{{clusterdetail?.id}}">{{clusterdetail?.clusterName}}</option>
+  <option value="ALL">ALL</option>
+</select>
+&nbsp;&nbsp;&nbsp;
+<select class="btn btn-secondary" (change)="mycustomer($event)" style="width:18%">
+  <option hidden>CUSTOMER NAME</option>
+  <option *ngFor="let customerdetail of listCustomerData" value="{{customerdetail?.id}}">{{customerdetail?.customerName}}</option>
+</select>
+&nbsp;&nbsp;&nbsp;
+<select class="btn btn-secondary" (change)="mycomponent($event)" style="width:18%">
+  <option hidden>COMPONENT</option>
+  <option *ngFor="let componentdetail of componentsDBData" value="{{componentdetail?.componentName}}">{{componentdetail?.componentName}}</option>
+  <option value="ALL">ALL</option>
+</select>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<button type="submit" class="btn btn-primary" style="color:white;" (click)="revgrowth()" ><b>RevGrowth</b></button>
+<br><br>
+<!-- Main ARC Table -->
+<div class="container-fluid">
+<table class="table table-bordered">
+  <tr style="background-color:#1976d2;color:whitesmoke;">
+    <th></th>
+    <th *ngFor="let month of monthsDBData">{{month.monthname}}
+    <!-- <td *ngFor="let month of monthsDBData" [ngClass]="{'active' : month.arcStatus === 'Actual',
+    'projected' : month.arcStatus === 'Projected'}">{{month.monthname}}</td> -->
+    <th>Annual Change</th>
+  </tr>
+  <tr>
+    <th style="background-color: #f4fa9b;">ARC Targeted</th>
+    <!-- <td *ngFor="let month of monthsDBData">
+      <div *ngIf="month.arcStatus=='Actual'" style="color: red;">{{month.arcTarget}}</div>
+      <div *ngIf="month.arcStatus=='Projected'">{{month.arcTarget}}</div>
+    </td> -->
+    <td *ngFor="let month of monthsDBData" [ngClass]="{'active' : month.arcStatus === 'Actual',
+          'projected' : month.arcStatus === 'Projected'}">{{month.arcTarget}}</td>
+    <td style="background-color: rgb(192, 243, 192);"></td>
+   </tr>
+   <tr>
+     <th style="background-color: #f4fa9b;">ARC Projected</th>
+     <!-- <td *ngFor="let month of monthsDBData">
+      <div *ngIf="month.arcStatus=='Actual'" style="color: red;">{{month.arcStatus}}</div>
+      <div *ngIf="month.arcStatus=='Projected'">{{month.arcStatus}}</div>
+      </td> -->
+      <td *ngFor="let month of monthsDBData" [ngClass]="{'active' : month.arcStatus === 'Actual',
+      'projected' : month.arcStatus === 'Projected'}">{{month.arcStatus}}</td>
+      <td style="background-color: rgb(192, 243, 192);" align="center">---</td>
+    </tr>
+    <tr>
+      <th style="background-color: #f4fa9b;">ARC</th>
+      <!-- <td *ngFor="let month of monthsDBData">
+        <div *ngIf="month.arcStatus=='Actual'" style="color: red;">{{month.arc}}</div>
+        <div *ngIf="month.arcStatus=='Projected'">{{month.arc}}</div>
+      </td> -->
+      <td *ngFor="let month of monthsDBData" [ngClass]="{'active' : month.arcStatus === 'Actual',
+      'projected' : month.arcStatus === 'Projected'}">{{month.arc}}</td>
+      <td style="background-color: rgb(192, 243, 192);" align="center">---</td>
+     </tr>
+   <tr>
+    <th style="background-color: #f4fa9b;">HC Projected</th>
+      <!-- <td *ngFor="let month of monthsDBData">
+        <div *ngIf="month.arcStatus=='Actual'" style="color: red;">{{month.hcProjected}}</div>
+        <div *ngIf="month.arcStatus=='Projected'">{{month.hcProjected}}</div>
+      </td> -->
+      <td *ngFor="let month of monthsDBData" [ngClass]="{'active' : month.arcStatus === 'Actual',
+      'projected' : month.arcStatus === 'Projected'}">{{month.hcProjected}}</td>
+    <td style="background-color: rgb(192, 243, 192);" align="center">{{annualchange | number}}</td>
+    <!-- <td>{{annualchange | number:'1.0-3'}}</td> -->
+  </tr>
+</table>
+</div>
+<br>
+
+<!-- Actual,Targets HeadCounts -->
+<div class="container-fluid">
+  <ngb-tabset [destroyOnHide]="false" justify="center">
+    <ngb-tab>
+      <ng-template ngbTabTitle>Target</ng-template>
+      <ng-template ngbTabContent>
+        <form #myForm="ngForm">
+            <!-- *ngIf="(customervalue!=null) && (componentvalue!='')" -->
+            <h3 style="color:blue;padding-left:700px"><i>Targeted HeadCount</i></h3>
+            <table class="table table-bordered">
+              <tr style="background-color: dimgrey;color:whitesmoke;">
+                <!-- <th>HC Simulated</th> -->
+                <th>Bands</th>
+                <th *ngFor="let month of monthsDBData">{{month.monthname}}</th>
+                <th>Percentage</th>
+              </tr>
+              <tr *ngFor="let band of bandsDBData">
+                <!-- <th></th> -->
+                <th>{{band.bandName}}</th>
+                <td *ngFor="let month of monthsDBData">
+                  <div *ngIf="month.arcStatus==='Actual'" style="color:red;">
+                   {{getAllInputs(band.id,month.id)}}
+                  </div>
+                  <div *ngIf="month.arcStatus==='Projected'">
+                    <!-- <input type="textbox" ngModel name="{{band.id}}{{month.id}}" style="border: hidden;width:50px;"> -->
+                    {{getAllInputs(band.id,month.id)}}
+                  </div>
+                </td>
+                <td></td>
+              </tr> 
+              <tr>
+                <!-- <th></th> -->
+                <th style="color:blue;">Total</th>
+                <td *ngFor="let months of monthsDBData"><b>{{getInputColumnTotal(months.id)}}</b></td>
+                <td></td>
+              </tr> 
+            </table>
+          </form>
+        </ng-template>
+    </ngb-tab>
+    <ngb-tab >
+      <ng-template ngbTabTitle>Actual</ng-template>
+      <ng-template ngbTabContent>
+        <form #myForm="ngForm">
+            <!-- *ngIf="(customervalue!=null) && (componentvalue!='')" -->
+            <h3 style="color:blue;padding-left: 700px;"><i>Actual HeadCount</i></h3>
+            <table class="table table-bordered">
+              <tr style="background-color: dimgrey;color:whitesmoke;">
+                <!-- <th>HC Simulated</th> -->
+                <th>Bands</th>
+                <th *ngFor="let month of monthsDBData">{{month.monthname}}</th>
+                <th>Percentage</th>
+              </tr>
+              <tr *ngFor="let band of bandsDBData">
+                <!-- <th></th> -->
+                <th>{{band.bandName}}</th>
+                <td *ngFor="let month of monthsDBData">
+                  <div *ngIf="month.arcStatus==='Actual'" style="color:red;">
+                   {{getAllInputs(band.id,month.id)}}
+                  </div>
+                  <div *ngIf="month.arcStatus==='Projected'">
+                    <input type="textbox" ngModel name="{{band.id}}{{month.id}}" style="border: hidden;width:50px;">
+                  </div>
+                </td>
+                <td></td>
+              </tr> 
+              <tr>
+                <!-- <th></th> -->
+                <th style="color:blue;">Total</th>
+                <td *ngFor="let months of monthsDBData"><b>{{getInputColumnTotal(months.id)}}</b></td>
+              </tr> 
+            </table>
+            <p style="padding-left: 750px;">
+            <button type="submit" (click)="myText(myForm)" class="btn btn-primary bg-light text-primary">
+              <h6>submit</h6>
+            </button>
+            </p>
+          </form>
+        </ng-template>
+    </ngb-tab> 
+
+  </ngb-tabset>
+</div>
+<br>
+<!-- percentage form -->
+<div class="container-fluid">
+  <form #myForm="ngForm">
+      <!-- *ngIf="(customervalue!=null) && (componentvalue!='')" -->
+    <h2 style="padding-left:750px;color:blue;"><i>Pyramid</i></h2>
+    <table class="table table-bordered">
+      <tr style="background-color: dimgrey;color:whitesmoke;">
+        <!-- <th>HC Simulated</th> -->
+        <th>Bands</th>
+        <th *ngFor="let month of monthsDBData">{{month.monthname}}</th>
+      </tr>
+      <tr *ngFor="let band of bandsDBData">
+        <!-- <th></th> -->
+        <th>{{band.bandName}}</th>
+        <td *ngFor="let month of monthsDBData">
+          {{(getPercentage(band.id,month.id,month.hcProjected)|number:'1.0-2')}}%
+        </td>
+      </tr> 
+    </table>
+  </form>
+</div>
+ <br>
+<!-- bootstrap tabs -->
+<div class="container-fluid">
+  <ngb-tabset [destroyOnHide]="false" justify="center">
+    <ngb-tab >
+      <ng-template ngbTabTitle>Attrition</ng-template>
+      <ng-template ngbTabContent>
+        <table class="table table-bordered" *ngIf="customervalue!=0">
+          <tr style="background-color: dimgrey;color: whitesmoke;">
+            <th>Attritions</th>
+            <th>Band</th>
+            <th *ngFor="let month of monthsDBData">{{month.monthname}}</th>
+          </tr>
+          <tr *ngFor="let band of bandsDBData">
+            <th></th>
+            <th>{{band.bandName}}</th>
+            <td *ngFor="let month of monthsDBData">
+              {{getAttritionIndividualSum(band.id,month.id)}}
+            </td>
+          </tr>
+          <tr>
+            <th></th>
+            <th style="color:blue;">Total</th>
+            <td *ngFor="let month of monthsDBData"><b>{{getAttritionTotal(month.id)}}</b></td>
+          </tr>
+        </table>
+      </ng-template>
+    </ngb-tab> 
+    <ngb-tab>
+      <ng-template ngbTabTitle>Promotion</ng-template>
+      <ng-template ngbTabContent>
+         <table class="table table-bordered" *ngIf="customervalue!=0">
+              <tr style="background-color: dimgrey;color: whitesmoke;">
+                <th>Promotions</th>
+                <th>Band</th>
+                <th *ngFor="let month of monthsDBData">{{month.monthname}}</th>
+              </tr>
+              <tr *ngFor="let band of bandsDBData">
+                <th></th>
+                <th>{{band.bandName}}</th>
+                <td *ngFor="let month of monthsDBData">
+                  {{getPromotionIndividualSum(band.id,month.id)}}
+                </td>
+              </tr>
+              <tr>
+                <th></th>
+                <th style="color:blue;">Total</th>
+                <td *ngFor="let month of monthsDBData"><b>{{getPromotionTotal(month.id)}}</b></td>
+              </tr>
+            </table>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab>
+      <ng-template ngbTabTitle>AAFD</ng-template>
+      <ng-template ngbTabContent>
+        <table class="table table-bordered" *ngIf="customervalue!=0">
+          <tr style="background-color: dimgrey;color: whitesmoke;">
+            <th>AAFDs</th>
+            <th>Band</th>
+            <th *ngFor="let month of monthsDBData">{{month.monthname}}</th>
+          </tr>
+          <tr *ngFor="let band of bandsDBData">
+            <th></th>
+            <th>{{band.bandName}}</th>
+            <td *ngFor="let month of monthsDBData">
+              {{getAafdIndividualSum(band.id,month.id)}}
+            </td>
+          </tr>
+          <tr>
+            <th></th>
+            <th style="color:blue;">Total</th>
+            <td *ngFor="let month of monthsDBData"><b>{{getAafdTotal(month.id)}}</b></td>
+          </tr>
+        </table>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab>
+      <ng-template ngbTabTitle>Joining Pipeline</ng-template>
+      <ng-template ngbTabContent>
+        <table class="table table-bordered" *ngIf="customervalue!=0">
+            <tr style="background-color: dimgrey;color: whitesmoke;">
+              <th>Joining Pipes</th>
+              <th>Band</th>
+              <th *ngFor="let month of monthsDBData">{{month.monthname}}</th>
+            </tr>
+            <tr *ngFor="let band of bandsDBData">
+              <th></th>
+              <th>{{band.bandName}}</th>
+              <td *ngFor="let month of monthsDBData">
+                {{getJoiningPipeIndividualSum(band.id,month.id)}}
+              </td>
+            </tr>
+            <tr>
+              <th></th>
+              <th style="color:blue;">Total</th>
+              <td *ngFor="let month of monthsDBData"><b>{{getJoiningPipeTotal(month.id)}}</b></td>
+            </tr>
+          </table>
+      </ng-template>
+    </ngb-tab>
+  </ngb-tabset>
+</div>

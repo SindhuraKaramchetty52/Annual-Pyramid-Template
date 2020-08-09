@@ -1,0 +1,35 @@
+<br>
+<p style="padding-left:1600px;">
+<button type="submit" class="btn btn-primary bg-white text-primary" style="font-size:25px;" (click)="replace()">Back</button>
+</p>
+<br>
+<div align="center">
+<form #myForm="ngForm" (ngSubmit)="onSubmit(myForm)">
+    <select class="btn btn-secondary" (change)="mysbu($event)" style="width:18%;">
+        <option hidden value="0">SBU</option>
+        <option *ngFor="let sbudetail of sbusDBData" value="{{sbudetail?.id}}">{{sbudetail?.sbuName}}</option>
+        <option value="ALL">ALL</option>
+    </select>
+    &nbsp;&nbsp;&nbsp;
+    <select class="btn btn-secondary" (change)="mycluster($event)" style="width:18%">
+        <option hidden>CLUSTER</option>
+        <option *ngFor="let clusterdetail of listClusterData" value="{{clusterdetail?.id}}">{{clusterdetail?.clusterName}}</option>
+        <option value="ALL">ALL</option>
+    </select>
+    &nbsp;&nbsp;&nbsp;
+    <select class="btn btn-secondary" (change)="mycustomer($event)" style="width:18%">
+        <option hidden>CUSTOMER NAME</option>
+        <option *ngFor="let customerdetail of listCustomerData" value="{{customerdetail?.id}}">{{customerdetail?.customerName}}</option>
+    </select>
+    &nbsp;&nbsp;&nbsp;
+    <select class="btn btn-secondary" (change)="mycomponent($event)" style="width:18%">
+        <option hidden>COMPONENT</option>
+        <option *ngFor="let componentdetail of componentsDBData" value="{{componentdetail?.id}}">{{componentdetail?.componentName}}</option>
+        <!-- <option value="ALL">ALL</option> -->
+    </select>
+    <br><br><br>
+    <label><b>Rev Growth:</b></label>
+    <input type="text" name="revgrowth" style="width:10%;" ngModel><br><br>
+    <button type="submit" class="btn btn-primary">OK</button>
+</form>
+</div>
